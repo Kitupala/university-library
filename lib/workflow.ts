@@ -26,7 +26,7 @@ export const sendEmail = async ({
       provider: resend({ token: config.env.resendToken }),
     },
     body: {
-      from: "Kitupala <hello.kimmo.io>",
+      from: "Kitupala <contact@kimmo.io>",
       to: [email],
       subject,
       html: message,
