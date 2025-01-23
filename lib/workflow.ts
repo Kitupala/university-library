@@ -53,8 +53,7 @@ export const sendEmail = async ({
       from: "Kitupala <contact@kimmo.io>",
       to: [email],
       subject,
-      // html: emailHtml,
-      html: "<p>This is a test email</p>",
+      html: emailHtml,
     },
   });
 };
