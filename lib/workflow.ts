@@ -8,6 +8,7 @@ import InactivityEmail, {
 } from "@/app/emails/InactivityEmail";
 import ActiveEmail, { ActiveEmailProps } from "@/app/emails/ActiveEmail";
 import { render } from "@react-email/render";
+import { ReactNode } from "react";
 
 export const workflowClient = new WorkflowClient({
   baseUrl: config.env.upstash.qstashUrl,
@@ -21,28 +22,30 @@ const qstashClient = new QStashClient({
 export const sendEmail = async ({
   email,
   subject,
-  template,
-  props,
+  react,
+  // template,
+  // props,
 }: {
   email: string;
   subject: string;
-  template: "welcome" | "inactive" | "active";
-  props: WelcomeEmailProps | InactivityEmailProps | ActiveEmailProps;
+  react: ReactNode;
+  // template: "welcome" | "inactive" | "active";
+  // props: WelcomeEmailProps | InactivityEmailProps | ActiveEmailProps;
   // props: Record<string, any>;
 }) => {
-  let emailHtml;
-
-  switch (template) {
-    case "welcome":
-      emailHtml = render(WelcomeEmail(props as WelcomeEmailProps));
-      break;
-    case "inactive":
-      emailHtml = render(InactivityEmail(props as InactivityEmailProps));
-      break;
-    case "active":
-      emailHtml = render(ActiveEmail(props as ActiveEmailProps));
-      break;
-  }
+  // let emailHtml;
+  //
+  // switch (template) {
+  //   case "welcome":
+  //     emailHtml = render(WelcomeEmail(props as WelcomeEmailProps));
+  //     break;
+  //   case "inactive":
+  //     emailHtml = render(InactivityEmail(props as InactivityEmailProps));
+  //     break;
+  //   case "active":
+  //     emailHtml = render(ActiveEmail(props as ActiveEmailProps));
+  //     break;
+  // }
 
   await qstashClient.publishJSON({
     api: {
@@ -53,7 +56,7 @@ export const sendEmail = async ({
       from: "Kitupala <contact@kimmo.io>",
       to: [email],
       subject,
-      html: WelcomeEmail(props as WelcomeEmailProps),
+      react,
     },
   });
 };

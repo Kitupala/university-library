@@ -3,6 +3,7 @@ import { db } from "@/database/drizzle";
 import { users } from "@/database/schema";
 import { eq } from "drizzle-orm";
 import { sendEmail } from "@/lib/workflow";
+import WelcomeEmail from "@/app/emails/WelcomeEmail";
 
 type UserState = "non-active" | "active";
 
@@ -46,8 +47,9 @@ export const { POST } = serve<InitialData>(async (context) => {
     await sendEmail({
       email,
       subject: "Welcome to the BookWise",
-      template: "welcome",
-      props: { fullName },
+      react: WelcomeEmail({ fullName }),
+      // template: "welcome",
+      // props: { fullName },
     });
   });
 
@@ -63,8 +65,9 @@ export const { POST } = serve<InitialData>(async (context) => {
         await sendEmail({
           email,
           subject: "Are you still there?",
-          template: "inactive",
-          props: { fullName },
+          react: WelcomeEmail({ fullName }),
+          // template: "inactive",
+          // props: { fullName },
         });
       });
     } else if (state === "active") {
@@ -72,8 +75,9 @@ export const { POST } = serve<InitialData>(async (context) => {
         await sendEmail({
           email,
           subject: "You're doing great on BookWise!",
-          template: "active",
-          props: { fullName },
+          react: WelcomeEmail({ fullName }),
+          // template: "active",
+          // props: { fullName },
         });
       });
     }
