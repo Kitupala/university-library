@@ -34,7 +34,7 @@ export const sendEmail = async ({
 
   switch (template) {
     case "welcome":
-      emailHtml = WelcomeEmail(props as WelcomeEmailProps);
+      emailHtml = render(WelcomeEmail(props as WelcomeEmailProps));
       break;
     case "inactive":
       emailHtml = render(InactivityEmail(props as InactivityEmailProps));
@@ -53,7 +53,8 @@ export const sendEmail = async ({
       from: "Kitupala <contact@kimmo.io>",
       to: [email],
       subject,
-      html: emailHtml,
+      // html: emailHtml,
+      html: "<p>This is a test email</p>",
     },
   });
 };
