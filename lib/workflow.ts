@@ -35,6 +35,7 @@ export const sendEmail = async ({
   switch (template) {
     case "welcome":
       emailHtml = render(WelcomeEmail(props as WelcomeEmailProps));
+      console.log("Rendered Email HTML:", emailHtml);
       break;
     case "inactive":
       emailHtml = render(InactivityEmail(props as InactivityEmailProps));
