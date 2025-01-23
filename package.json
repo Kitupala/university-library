@@ -9,7 +9,8 @@
     "lint": "next lint",
     "db:generate": "npx drizzle-kit generate",
     "db:migrate": "npx drizzle-kit migrate",
-    "db:studio": "npx drizzle-kit studio"
+    "db:studio": "npx drizzle-kit studio",
+    "email:dev": "email dev --dir app/emails"
   },
   "dependencies": {
     "@hookform/resolvers": "^3.10.0",
@@ -18,6 +19,8 @@
     "@radix-ui/react-label": "^2.1.1",
     "@radix-ui/react-slot": "^1.1.1",
     "@radix-ui/react-toast": "^1.2.4",
+    "@react-email/components": "^0.0.32",
+    "@react-email/render": "^1.0.4",
     "@upstash/ratelimit": "^2.0.5",
     "@upstash/redis": "^1.34.3",
     "@upstash/workflow": "^0.2.4",
@@ -50,6 +53,7 @@
     "postcss": "^8",
     "prettier": "^3.4.2",
     "prettier-plugin-tailwindcss": "^0.6.9",
+    "react-email": "^3.0.6",
     "tailwindcss": "^3.4.1",
     "typescript": "^5"
   }
