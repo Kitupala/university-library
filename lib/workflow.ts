@@ -53,7 +53,7 @@ export const sendEmail = async ({
       from: "Kitupala <contact@kimmo.io>",
       to: [email],
       subject,
-      react: WelcomeEmail(props as WelcomeEmailProps),
+      html: WelcomeEmail(props as WelcomeEmailProps),
     },
   });
 };
