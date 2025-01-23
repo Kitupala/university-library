@@ -1,3 +1,14 @@
+// import * as React from "react";
+// import { Body, Html, Text } from "@react-email/components";
+//
+// export const WelcomeEmail = () => (
+//   <Html>
+//     <Body>
+//       <Text>Simple Test Email</Text>
+//     </Body>
+//   </Html>
+// );
+// export default WelcomeEmail;
 import * as React from "react";
 import {
   Body,
