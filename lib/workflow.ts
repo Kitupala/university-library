@@ -2,7 +2,7 @@ import { Client as WorkflowClient } from "@upstash/workflow";
 import { Client as QStashClient, resend } from "@upstash/qstash";
 import config from "@/lib/config";
 
-import WelcomeEmail, { WelcomeEmailProps } from "@/app/emails/WelcomeEmail";
+import WelcomeEmail from "@/app/emails/WelcomeEmail";
 import InactivityEmail, {
   InactivityEmailProps,
 } from "@/app/emails/InactivityEmail";
@@ -27,14 +27,14 @@ export const sendEmail = async ({
   email: string;
   subject: string;
   template: "welcome" | "inactive" | "active";
-  props: WelcomeEmailProps | InactivityEmailProps | ActiveEmailProps;
+  props: InactivityEmailProps | ActiveEmailProps;
   // props: Record<string, any>;
 }) => {
   let emailHtml;
 
   switch (template) {
     case "welcome":
-      emailHtml = render(WelcomeEmail({ fullName: "Test User" }));
+      emailHtml = render(WelcomeEmail());
       console.log("Rendered HTML:", emailHtml);
       // emailHtml = render(WelcomeEmail(props as WelcomeEmailProps));
       break;
