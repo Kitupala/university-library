@@ -8,6 +8,7 @@ import InactivityEmail, {
 } from "@/app/emails/InactivityEmail";
 import ActiveEmail, { ActiveEmailProps } from "@/app/emails/ActiveEmail";
 import { render } from "@react-email/render";
+import React from "react";
 
 export const workflowClient = new WorkflowClient({
   baseUrl: config.env.upstash.qstashUrl,
@@ -30,17 +31,17 @@ export const sendEmail = async ({
   props: WelcomeEmailProps | InactivityEmailProps | ActiveEmailProps;
   // props: Record<string, any>;
 }) => {
-  let emailHtml;
+  let emailTemplate;
 
   switch (template) {
     case "welcome":
-      emailHtml = WelcomeEmail(props as WelcomeEmailProps);
+      emailTemplate = WelcomeEmail(props as WelcomeEmailProps);
       break;
     case "inactive":
-      emailHtml = render(InactivityEmail(props as InactivityEmailProps));
+      emailTemplate = render(InactivityEmail(props as InactivityEmailProps));
       break;
     case "active":
-      emailHtml = render(ActiveEmail(props as ActiveEmailProps));
+      emailTemplate = render(ActiveEmail(props as ActiveEmailProps));
       break;
   }
 
@@ -53,7 +54,7 @@ export const sendEmail = async ({
       from: "Kitupala <contact@kimmo.io>",
       to: [email],
       subject,
-      react: emailHtml,
+      react: WelcomeEmail(props as WelcomeEmailProps),
     },
   });
 };
