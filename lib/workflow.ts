@@ -34,36 +34,50 @@ export const sendEmail = async ({
   let emailHtml;
 
   // Render the appropriate React email template
-  if (template === "welcome") {
-    emailHtml = render(
-      React.createElement(WelcomeEmail, props as WelcomeEmailProps),
-    );
-  } else if (template === "inactive") {
-    emailHtml = render(
-      React.createElement(InactivityEmail, props as InactivityEmailProps),
-    );
-  } else if (template === "active") {
-    emailHtml = render(
-      React.createElement(ActiveEmail, props as ActiveEmailProps),
-    );
-  } else {
-    throw new Error(`Unknown email template: ${template}`);
+  switch (template) {
+    case "welcome":
+      emailHtml = render(
+        React.createElement(WelcomeEmail, props as WelcomeEmailProps),
+      );
+      break;
+    case "inactive":
+      emailHtml = render(
+        React.createElement(InactivityEmail, props as InactivityEmailProps),
+      );
+      break;
+    case "active":
+      emailHtml = render(
+        React.createElement(ActiveEmail, props as ActiveEmailProps),
+      );
+      break;
   }
+
+  const payload = {
+    to: email,
+    subject: subject,
+    html: emailHtml, // Rendered HTML content
+    text: "Fallback for the email.", // Fallback plain text (adjust as needed)
+  };
 
   // Debug the rendered HTML (optional)
   console.log("Rendered Email HTML:", emailHtml);
 
+  console.log("QStash Payload:", payload);
+
   await qstashClient.publishJSON({
-    api: {
-      name: "email",
-      provider: resend({ token: config.env.resendToken }),
-    },
-    body: {
-      from: "Kitupala <contact@kimmo.io>",
-      to: [email],
-      subject,
-      react: emailHtml,
-      text: "Fallback for the email.",
-    },
+    topic: "send-email", // Replace with your QStash topic name/URL
+    body: payload,
+
+    // api: {
+    //   name: "email",
+    //   provider: resend({ token: config.env.resendToken }),
+    // },
+    // body: {
+    //   from: "Kitupala <contact@kimmo.io>",
+    //   to: [email],
+    //   subject,
+    //   react: emailHtml,
+    //   text: "Fallback for the email.",
+    // },
   });
 };
