@@ -1,3 +1,4 @@
+import React from "react";
 import { serve } from "@upstash/workflow/nextjs";
 import { db } from "@/database/drizzle";
 import { users } from "@/database/schema";
@@ -5,7 +6,8 @@ import { eq } from "drizzle-orm";
 import { sendEmail } from "@/lib/workflow";
 import { render } from "@react-email/render";
 import WelcomeEmail from "@/app/emails/WelcomeEmail";
-import React from "react";
+import InactivityEmail from "@/app/emails/InactivityEmail";
+import ActiveEmail from "@/app/emails/ActiveEmail";
 
 type UserState = "non-active" | "active";
 
@@ -46,7 +48,6 @@ export const { POST } = serve<InitialData>(async (context) => {
 
   // Welcome email
   await context.run("new-signup", async () => {
-    // const emailTemplate = render(<WelcomeEmail fullName={fullName} />);
     const emailTemplate = await render(
       React.createElement(WelcomeEmail, { fullName }),
     );
@@ -68,8 +69,9 @@ export const { POST } = serve<InitialData>(async (context) => {
     if (state === "non-active") {
       await context.run("send-email-non-active", async () => {
         const emailTemplate = await render(
-          React.createElement(WelcomeEmail, { fullName }),
+          React.createElement(InactivityEmail, { fullName }),
         );
+
         await sendEmail({
           email,
           subject: "Are you still there?",
@@ -79,7 +81,7 @@ export const { POST } = serve<InitialData>(async (context) => {
     } else if (state === "active") {
       await context.run("send-email-active", async () => {
         const emailTemplate = await render(
-          React.createElement(WelcomeEmail, { fullName }),
+          React.createElement(ActiveEmail, { fullName }),
         );
         await sendEmail({
           email,
