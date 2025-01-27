@@ -62,8 +62,8 @@ export const sendEmail = async ({
   // Render the email HTML using the helper function
   const emailHtml = await renderEmailTemplate(template as EmailTemplate, props);
 
-  // Debug the rendered HTML (optional)
-  console.log("Rendered Email HTML:", emailHtml);
+  // Generate plain-text fallback from the rendered HTML (simple fallback logic)
+  const fallbackText = emailHtml.replace(/<[^>]*>/g, "").trim(); // Removes HTML tags
 
   // Send the email using qstashClient
   await qstashClient.publishJSON({
@@ -76,7 +76,7 @@ export const sendEmail = async ({
       to: [email],
       subject,
       react: emailHtml,
-      text: "Fallback for the email.",
+      text: fallbackText, // Use extracted fallback text
     },
   });
 };
