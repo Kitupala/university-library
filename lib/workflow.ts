@@ -29,14 +29,12 @@ export const sendEmail = async ({
   subject: string;
   template: "welcome" | "inactive" | "active";
   props: WelcomeEmailProps | InactivityEmailProps | ActiveEmailProps;
-  // props: Record<string, any>;
 }) => {
   let emailHtml;
 
-  // Render the appropriate React email template
   switch (template) {
     case "welcome":
-      emailHtml = render(
+      emailHtml = await render(
         React.createElement(WelcomeEmail, props as WelcomeEmailProps),
       );
       break;
@@ -52,32 +50,20 @@ export const sendEmail = async ({
       break;
   }
 
-  const payload = {
-    to: email,
-    subject: subject,
-    html: emailHtml, // Rendered HTML content
-    text: "Fallback for the email.", // Fallback plain text (adjust as needed)
-  };
-
   // Debug the rendered HTML (optional)
   console.log("Rendered Email HTML:", emailHtml);
 
-  console.log("QStash Payload:", payload);
-
   await qstashClient.publishJSON({
-    topic: "send-email", // Replace with your QStash topic name/URL
-    body: payload,
-
-    // api: {
-    //   name: "email",
-    //   provider: resend({ token: config.env.resendToken }),
-    // },
-    // body: {
-    //   from: "Kitupala <contact@kimmo.io>",
-    //   to: [email],
-    //   subject,
-    //   react: emailHtml,
-    //   text: "Fallback for the email.",
-    // },
+    api: {
+      name: "email",
+      provider: resend({ token: config.env.resendToken }),
+    },
+    body: {
+      from: "Kitupala <contact@kimmo.io>",
+      to: [email],
+      subject,
+      react: emailHtml,
+      text: "Fallback for the email.",
+    },
   });
 };
