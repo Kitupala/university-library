@@ -31,19 +31,27 @@ export const sendEmail = async ({
   props: WelcomeEmailProps | InactivityEmailProps | ActiveEmailProps;
   // props: Record<string, any>;
 }) => {
-  let emailTemplate;
+  let emailHtml;
 
-  switch (template) {
-    case "welcome":
-      emailTemplate = WelcomeEmail(props as WelcomeEmailProps);
-      break;
-    case "inactive":
-      emailTemplate = render(InactivityEmail(props as InactivityEmailProps));
-      break;
-    case "active":
-      emailTemplate = render(ActiveEmail(props as ActiveEmailProps));
-      break;
+  // Render the appropriate React email template
+  if (template === "welcome") {
+    emailHtml = render(
+      React.createElement(WelcomeEmail, props as WelcomeEmailProps),
+    );
+  } else if (template === "inactive") {
+    emailHtml = render(
+      React.createElement(InactivityEmail, props as InactivityEmailProps),
+    );
+  } else if (template === "active") {
+    emailHtml = render(
+      React.createElement(ActiveEmail, props as ActiveEmailProps),
+    );
+  } else {
+    throw new Error(`Unknown email template: ${template}`);
   }
+
+  // Debug the rendered HTML (optional)
+  console.log("Rendered Email HTML:", emailHtml);
 
   await qstashClient.publishJSON({
     api: {
@@ -54,7 +62,8 @@ export const sendEmail = async ({
       from: "Kitupala <contact@kimmo.io>",
       to: [email],
       subject,
-      react: WelcomeEmail(props as WelcomeEmailProps),
+      react: emailHtml,
+      text: "Fallback for the email.",
     },
   });
 };
