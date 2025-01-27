@@ -14,11 +14,11 @@ const qstashClient = new QStashClient({
 export const sendEmail = async ({
   email,
   subject,
-  message,
+  html,
 }: {
   email: string;
   subject: string;
-  message: string;
+  html: string;
 }) => {
   await qstashClient.publishJSON({
     api: {
@@ -29,7 +29,7 @@ export const sendEmail = async ({
       from: "Kitupala <contact@kimmo.io>",
       to: [email],
       subject,
-      html: message,
+      html,
     },
   });
 };

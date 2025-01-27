@@ -3,6 +3,9 @@ import { db } from "@/database/drizzle";
 import { users } from "@/database/schema";
 import { eq } from "drizzle-orm";
 import { sendEmail } from "@/lib/workflow";
+import { render } from "@react-email/render";
+import WelcomeEmail from "@/app/emails/WelcomeEmail";
+import React from "react";
 
 type UserState = "non-active" | "active";
 
@@ -43,10 +46,15 @@ export const { POST } = serve<InitialData>(async (context) => {
 
   // Welcome email
   await context.run("new-signup", async () => {
+    // const emailTemplate = render(<WelcomeEmail fullName={fullName} />);
+    const emailTemplate = await render(
+      React.createElement(WelcomeEmail, { fullName }),
+    );
+
     await sendEmail({
       email,
-      subject: "Welcome to the platform",
-      message: `Welcome ${fullName}!`,
+      subject: "Welcome to the BookWise!",
+      html: emailTemplate,
     });
   });
 
@@ -59,18 +67,24 @@ export const { POST } = serve<InitialData>(async (context) => {
 
     if (state === "non-active") {
       await context.run("send-email-non-active", async () => {
+        const emailTemplate = await render(
+          React.createElement(WelcomeEmail, { fullName }),
+        );
         await sendEmail({
           email,
           subject: "Are you still there?",
-          message: `Hey ${fullName}, we miss you!`,
+          html: emailTemplate,
         });
       });
     } else if (state === "active") {
       await context.run("send-email-active", async () => {
+        const emailTemplate = await render(
+          React.createElement(WelcomeEmail, { fullName }),
+        );
         await sendEmail({
           email,
           subject: "Welcome back!",
-          message: `Welcome back ${fullName}!`,
+          html: emailTemplate,
         });
       });
     }
