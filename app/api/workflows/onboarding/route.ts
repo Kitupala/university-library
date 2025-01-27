@@ -45,9 +45,8 @@ export const { POST } = serve<InitialData>(async (context) => {
   await context.run("new-signup", async () => {
     await sendEmail({
       email,
-      subject: "Welcome to the BookWise",
-      template: "welcome",
-      props: { fullName },
+      subject: "Welcome to the platform",
+      message: `Welcome ${fullName}!`,
     });
   });
 
@@ -63,17 +62,15 @@ export const { POST } = serve<InitialData>(async (context) => {
         await sendEmail({
           email,
           subject: "Are you still there?",
-          template: "inactive",
-          props: { fullName },
+          message: `Hey ${fullName}, we miss you!`,
         });
       });
     } else if (state === "active") {
       await context.run("send-email-active", async () => {
         await sendEmail({
           email,
-          subject: "You're doing great on BookWise!",
-          template: "active",
-          props: { fullName },
+          subject: "Welcome back!",
+          message: `Welcome back ${fullName}!`,
         });
       });
     }
