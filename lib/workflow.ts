@@ -19,6 +19,35 @@ const qstashClient = new QStashClient({
   token: config.env.upstash.qstashToken,
 });
 
+enum EmailTemplate {
+  WELCOME = "welcome",
+  INACTIVE = "inactive",
+  ACTIVE = "active",
+}
+
+// Helper function for rendering email templates
+const renderEmailTemplate = (
+  template: EmailTemplate,
+  props: WelcomeEmailProps | InactivityEmailProps | ActiveEmailProps,
+): Promise<string> => {
+  switch (template) {
+    case EmailTemplate.WELCOME:
+      return render(
+        React.createElement(WelcomeEmail, props as WelcomeEmailProps),
+      );
+    case EmailTemplate.INACTIVE:
+      return render(
+        React.createElement(InactivityEmail, props as InactivityEmailProps),
+      );
+    case EmailTemplate.ACTIVE:
+      return render(
+        React.createElement(ActiveEmail, props as ActiveEmailProps),
+      );
+    default:
+      throw new Error(`Unknown email template: ${template}`);
+  }
+};
+
 export const sendEmail = async ({
   email,
   subject,
@@ -27,32 +56,16 @@ export const sendEmail = async ({
 }: {
   email: string;
   subject: string;
-  template: "welcome" | "inactive" | "active";
+  template: EmailTemplate;
   props: WelcomeEmailProps | InactivityEmailProps | ActiveEmailProps;
 }) => {
-  let emailHtml;
-
-  switch (template) {
-    case "welcome":
-      emailHtml = await render(
-        React.createElement(WelcomeEmail, props as WelcomeEmailProps),
-      );
-      break;
-    case "inactive":
-      emailHtml = render(
-        React.createElement(InactivityEmail, props as InactivityEmailProps),
-      );
-      break;
-    case "active":
-      emailHtml = render(
-        React.createElement(ActiveEmail, props as ActiveEmailProps),
-      );
-      break;
-  }
+  // Render the email HTML using the helper function
+  const emailHtml = await renderEmailTemplate(template as EmailTemplate, props);
 
   // Debug the rendered HTML (optional)
   console.log("Rendered Email HTML:", emailHtml);
 
+  // Send the email using qstashClient
   await qstashClient.publishJSON({
     api: {
       name: "email",
