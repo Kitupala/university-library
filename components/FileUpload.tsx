@@ -41,6 +41,7 @@ interface FileUploadProps {
   placeholder: string;
   folder: string;
   variant: "light" | "dark";
+  value?: string;
   onFileChange: (filePath: string) => void;
 }
 
@@ -50,10 +51,13 @@ const FileUpload = ({
   placeholder,
   folder,
   variant,
+  value,
   onFileChange,
 }: FileUploadProps) => {
   const ikUploadRef = useRef(null);
-  const [file, setFile] = useState<{ filePath: string } | null>(null);
+  const [file, setFile] = useState<{ filePath: string | null }>({
+    filePath: value ?? null,
+  });
   const [progress, setProgress] = useState(0);
   const { toast } = useToast();
 
@@ -162,7 +166,7 @@ const FileUpload = ({
         </div>
       )}
 
-      {file &&
+      {file?.filePath &&
         (type === "image" ? (
           <IKImage
             alt={file.filePath}
