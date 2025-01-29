@@ -4,6 +4,8 @@ import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { bookSchema } from "@/lib/validations";
 import { useForm } from "react-hook-form";
+import { createBook } from "@/lib/admin/actions/books";
+import { useRouter } from "next/navigation";
 
 import {
   Form,
@@ -14,11 +16,11 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import { useRouter } from "next/navigation";
 import { Textarea } from "@/components/ui/textarea";
 import { Button } from "@/components/ui/button";
 import FileUpload from "@/components/FileUpload";
 import ColorPicker from "@/components/admin/ColorPicker";
+import { toast } from "@/hooks/use-toast";
 
 interface Props extends Partial<Book> {
   type?: "create" | "update";
@@ -44,7 +46,22 @@ const BookForm = ({ type, ...book }: Props) => {
   });
 
   const onSubmit = async (values: z.infer<typeof bookSchema>) => {
-    console.log("onSubmit values:", values);
+    const result = await createBook(values);
+
+    if (result.success) {
+      toast({
+        title: "Success",
+        description: "Book added successfully",
+      });
+
+      router.push(`/admin/books/${result.data.id}`);
+    } else {
+      toast({
+        title: "Error",
+        description: result.error,
+        variant: "destructive",
+      });
+    }
   };
 
   return (
