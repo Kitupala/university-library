@@ -9,7 +9,8 @@ const BookCard = ({
   title,
   genre,
   coverColor,
-  cover,
+  coverUrl,
+  // @ts-ignore
   isLoanedBook = false,
 }: Book) => (
   <li className={cn(isLoanedBook && "w-full xs:w-52")}>
@@ -17,7 +18,7 @@ const BookCard = ({
       href={`/books/${id}`}
       className={cn(isLoanedBook && "flex w-full flex-col items-center")}
     >
-      <BookCover coverColor={coverColor} coverImage={cover} />
+      <BookCover coverColor={coverColor} coverImage={coverUrl} />
 
       <div className={cn("mt-4", !isLoanedBook && "max-w-28 xs:max-w-40")}>
         <p className="book-title">{title}</p>
@@ -43,4 +44,5 @@ const BookCard = ({
     </Link>
   </li>
 );
+
 export default BookCard;

@@ -22,6 +22,15 @@ export const WelcomeEmail = ({ fullName }: WelcomeEmailProps) => (
     <Tailwind>
       <Body className="mx-auto my-auto bg-white px-2 font-sans">
         <Container className="mx-auto max-w-md px-4 py-8">
+          {/*<Img*/}
+          {/*  // src="/emails/static/logo.svg"*/}
+          {/*  src={`${process.env.NEXT_PUBLIC_BASE_URL}/static/logo.svg`}*/}
+          {/*  alt="logo"*/}
+          {/*  width={37}*/}
+          {/*  height={37}*/}
+          {/*  className="mx-auto"*/}
+          {/*/>*/}
+
           <Heading className="mb-4 text-2xl font-semibold text-gray-900">
             Welcome to the BookWise!
           </Heading>
